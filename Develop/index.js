@@ -1,8 +1,10 @@
 // TODO: Include packages needed for this application
 const inquirer = require("inquirer");
 const fs = require("fs");
+const generateMarkdown = require("./utils/generateMarkdown");
+let questionsArr = [];
 // TODO: Create an array of questions for user input
-const readme = async () => {
+const init = async () => {
   const questions = await inquirer.prompt([
     {
       type: "input",
@@ -33,6 +35,11 @@ const readme = async () => {
       type: "input",
       message: "What are the test instructions?",
       name: "test",
+    },
+    {
+      type: "list",
+      message: "Please choose a license",
+      name: "license",
       choices: [
         "None",
         "Apache License 2.0",
@@ -51,11 +58,6 @@ const readme = async () => {
       ],
     },
     {
-      type: "list",
-      message: "Please choose a license",
-      name: "license",
-    },
-    {
       type: "input",
       message: "What is your GitHub username?",
       name: "github",
@@ -66,13 +68,22 @@ const readme = async () => {
       name: "email",
     },
   ]);
+  console.log(questions);
+  questionsArr.push(questions);
+  writeToFile();
 };
 
 // TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+const writeToFile = () => {
+  try {
+    fs.writeFileSync("dist/README.md", generateMarkdown(questionsArr));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // TODO: Create a function to initialize app
-function init() {}
+// function init() {}
 
 // Function call to initialize app
 init();
